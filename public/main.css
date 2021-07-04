@@ -74,6 +74,7 @@ body {
     position: fixed;
     bottom: 2%;
     left: 40%;
+    z-index: 3;
 }
 
 #chatbtn {
@@ -100,8 +101,8 @@ button:hover {
     display: block;
     border-color: red;
     position: fixed;
-    top: 15%;
-    bottom: 13%;
+    top: 10%;
+    bottom: 10%;
     left: 2%;
     right: 2%;
     border-radius: 0.7%;
@@ -115,10 +116,24 @@ button:hover {
     background-color: #202020 !important;
 }
 
+.container {
+    margin-left: 2% !important;
+    margin-right: 2%;
+    display: flex;
+    flex-direction: column;
+    flex: 1 !important;
+}
+
+.rowi {
+    display: flex;
+    flex-direction: row;
+    flex: 1 !important;
+}
+
 video {
     background: rgb(0, 0, 0);
-    width: auto;
-    height: 100%;
+    width: 500px !important;
+    height: 280px;
     display: block;
-    margin: 2%;
+    margin: 1%;
 }
