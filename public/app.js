@@ -18,7 +18,7 @@ let remoteStreamSender = null;
 let remoteScreenShare = null;
 let localScreenShare = null;
 const screenShare = document.getElementById('screenShare');
-const videooff = document.querySelector('#videoChange');
+const videooff = document.querySelector('#closecameraBtn');
 const audiooff = document.querySelector('#audioChange');
 
 
@@ -28,9 +28,17 @@ function init() {
     document.querySelector('#createBtn').addEventListener('click', createRoom);
     document.querySelector('#joinBtn').addEventListener('click', joinRoom);
     document.querySelector('#screenShare').addEventListener('click', screen_share);
+    document.querySelector('#closecameraBtn').addEventListener('click', closeCamera);
     roomDialog = new mdc.dialog.MDCDialog(document.querySelector('#room-dialog'));
 }
 
+function closeCamera() {
+    var videoTracks = localStream.getVideoTracks();
+    console.log("video close");
+    for (var i = 0; i < videoTracks.length; ++i) {
+        videoTracks[i].enabled = !videoTracks[i].enabled;
+    }
+}
 
 async function createRoom() {
     console.log("HI\n");
@@ -304,7 +312,7 @@ async function screen_share() {
     navigator.mediaDevices.getDisplayMedia({ video: true }).then(handleSuccess);
 };
 
-
+/*
 videooff.addEventListener("click", function() {
     console.log("removeVideoTrack()");
     if (localStreamSender) {
@@ -319,7 +327,7 @@ videooff.addEventListener("click", function() {
 
     //remoteStream.removeTrack(remoteStream.getVideoTracks()[0])
     videooff.disabled = true;
-});
+});*/
 
 audiooff.addEventListener("click", function() {
     console.log("removeAudioTrack()");
