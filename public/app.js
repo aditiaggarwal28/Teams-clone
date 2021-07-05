@@ -29,14 +29,31 @@ function init() {
     document.querySelector('#joinBtn').addEventListener('click', joinRoom);
     document.querySelector('#screenShare').addEventListener('click', screen_share);
     document.querySelector('#closecameraBtn').addEventListener('click', closeCamera);
+    document.querySelector('#muteAudio').addEventListener('click', closeMic);
     roomDialog = new mdc.dialog.MDCDialog(document.querySelector('#room-dialog'));
 }
 
 function closeCamera() {
+    if (localStream == null) {
+        console.log("no stream found")
+        return;
+    }
     var videoTracks = localStream.getVideoTracks();
-    console.log("video close");
+    console.log("video change");
     for (var i = 0; i < videoTracks.length; ++i) {
         videoTracks[i].enabled = !videoTracks[i].enabled;
+    }
+}
+
+function closeMic() {
+    if (localStream == null) {
+        console.log("no stream found")
+        return;
+    }
+    var audioTracks = localStream.getAudioTracks();
+    console.log("Audio change");
+    for (var i = 0; i < audioTracks.length; ++i) {
+        audioTracks[i].enabled = !audioTracks[i].enabled;
     }
 }
 
