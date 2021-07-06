@@ -17,14 +17,10 @@ let localStreamSender = null;
 let remoteStreamSender = null;
 let remoteScreenShare = null;
 let localScreenShare = null;
-const screenShare = document.getElementById('screenShare');
-const videooff = document.querySelector('#closecameraBtn');
 
 function init() {
-    document.querySelector('#cameraBtn').addEventListener('click', openUserMedia);
     document.querySelector('#hangupBtn').addEventListener('click', hangUp);
-    document.querySelector('#createBtn').addEventListener('click', createRoom);
-    document.querySelector('#joinBtn').addEventListener('click', joinRoom);
+
     document.querySelector('#screenShare').addEventListener('click', screen_share);
     document.querySelector('#closecameraBtn').addEventListener('click', closeCamera);
     document.querySelector('#muteAudio').addEventListener('click', closeMic);
@@ -74,8 +70,6 @@ async function createRoom() {
     document.querySelector('#localVideo').srcObject = localStream;
     document.querySelector('#remoteVideo').srcObject = remoteStream;
     console.log("HI\n");
-    document.querySelector('#createBtn').disabled = true;
-    document.querySelector('#joinBtn').disabled = true;
     const db = firebase.firestore();
     const roomRef = await db.collection('rooms').doc();
 
@@ -278,12 +272,8 @@ async function hangUp(e) {
     document.querySelector('#localVideo').srcObject = null;
     document.querySelector('#remoteVideo').srcObject = null;
     document.querySelector('#remoteScreenShare').srcObject = null;
-    document.querySelector('#cameraBtn').disabled = false;
-    document.querySelector('#joinBtn').disabled = true;
-    document.querySelector('#createBtn').disabled = true;
     document.querySelector('#hangupBtn').disabled = true;
     document.querySelector('#currentRoom').innerText = '';
-    document.querySelector('#screenShare').disabled = true;
 
     // Delete room on hangup
     if (roomId) {

@@ -153,3 +153,26 @@ video {
     display: block;
     margin: 1%;
 }
+
+#front_flex {
+    display: flex;
+    flex-direction: row-reverse;
+    margin-left: 10%;
+    margin-right: 15%;
+    align-items: center;
+    justify-content: space-around;
+    margin-top: 6%;
+}
+
+#front-buttons {
+    display: flex;
+    flex-direction: column;
+}
+
+#myVid {
+    background: rgb(0, 0, 0);
+    max-width: 800px !important;
+    height: auto;
+    display: block;
+    margin: 1%;
+}

@@ -19,15 +19,19 @@
 <body style="background-color: LightGray">
     <div id="root"></div>
     <div id="front_page">
-        <button class="mdc-button mdc-button--raised" id="createIt">
-            <span class="mdc-button__label">Create Room and Join</span>
-        </button>
-        <button class="mdc-button mdc-button--raised" id="joinIt">
-            <span class="mdc-button__label">Join Room</span>
-        </button>
-        <div>
-            <span id="currentRoom"></span>
+        <div id="front_flex">
+            <div id="front-buttons">
+                <button class="mdc-button mdc-button--raised" id="createIt">
+                    <span class="mdc-button__label">Create New Room and Join</span>
+                </button>
+                <button class="mdc-button mdc-button--raised" id="joinIt">
+                    <span class="mdc-button__label">Join Room</span>
+                </button>
+            </div>
+            <video class="border rounded border-primary" id="myVid" muted autoplay playsinline>
+            </video>
         </div>
+
         <div class="mdc-dialog" id="room-dialog" role="alertdialog" aria-modal="true" aria-labelledby="my-dialog-title" aria-describedby="my-dialog-content">
             <div class="mdc-dialog__container">
                 <div class="mdc-dialog__surface">
@@ -36,7 +40,7 @@
                         Enter ID for room to join:
                         <div class="mdc-text-field">
                             <input type="text" id="room-id" class="mdc-text-field__input">
-                            <label class="mdc-floating-label" for="my-text-field">Room ID</label>
+                            <label class="mdc-floating-label" for="my-text-field"></label>
                             <div class="mdc-line-ripple"></div>
                         </div>
                     </div>
@@ -53,25 +57,16 @@
             <div class="mdc-dialog__scrim"></div>
         </div>
 
-        <video id="myVid" muted autoplay playsinline></video>
+
     </div>
     <div id="main_code">
+        <div>
+            <span id="currentRoom"></span>
+        </div>
         <div id="buttons">
 
             <div id="errormsg"></div>
 
-            <button class="mdc-button mdc-button--raised" id="createBtn">
-                <i class="material-icons mdc-button__icon" aria-hidden="true">group_add</i>
-                <span class="mdc-button__label">Create room</span>
-            </button>
-            <button class="mdc-button mdc-button--raised" id="joinBtn">
-                <i class="material-icons mdc-button__icon" aria-hidden="true">group</i>
-                <span class="mdc-button__label">Join room</span>
-            </button>
-            <button class="mdc-button mdc-button--raised" id="cameraBtn">
-                <i class="material-icons mdc-button__icon" aria-hidden="true">Screen Share</i>
-                <span class="mdc-button__label">video off</span>
-            </button>
             <div id="pane" class="row justify-content-center">
                 <button onmousedown="event.preventDefault()" class="col-0 btn btn-secondary" id="muteAudio">
                     <img id="micImg" src="img/mic.png" style="width:25px">
