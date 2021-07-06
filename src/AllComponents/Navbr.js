@@ -13,7 +13,7 @@ class Navbr extends Component {
             <>
                 <Navbar style={myStyle}>
                     <Nav className="mr-auto">
-                        <Nav.Link href="https://www.microsoft.com/en-in/microsoft-teams/group-chat-software">
+                        <Nav.Link href="">
                         </Nav.Link>
                         <Nav.Link href="#home">
                             <img
@@ -24,7 +24,7 @@ class Navbr extends Component {
                                 alt="Microsoft Teams logo"
                             />
                         </Nav.Link>
-                        <Nav.Link href="https://www.microsoft.com/en-in/microsoft-teams/group-chat-software">
+                        <Nav.Link href="">
                             <h2 style={{
                                 fontSize: "25px",
                                 color: "white",

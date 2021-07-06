@@ -18,83 +18,96 @@
 
 <body style="background-color: LightGray">
     <div id="root"></div>
-    <div id="buttons">
+    <div id="front_page">
+        <button class="mdc-button mdc-button--raised" id="createIt">
+            <span class="mdc-button__label">Create Room and Join</span>
+        </button>
+        <button class="mdc-button mdc-button--raised" id="joinIt">
+            <span class="mdc-button__label">Join Room</span>
+        </button>
+        <div>
+            <span id="currentRoom"></span>
+        </div>
+        <div class="mdc-dialog" id="room-dialog" role="alertdialog" aria-modal="true" aria-labelledby="my-dialog-title" aria-describedby="my-dialog-content">
+            <div class="mdc-dialog__container">
+                <div class="mdc-dialog__surface">
+                    <h2 class="mdc-dialog__title" id="my-dialog-title">Join room</h2>
+                    <div class="mdc-dialog__content" id="my-dialog-content">
+                        Enter ID for room to join:
+                        <div class="mdc-text-field">
+                            <input type="text" id="room-id" class="mdc-text-field__input">
+                            <label class="mdc-floating-label" for="my-text-field">Room ID</label>
+                            <div class="mdc-line-ripple"></div>
+                        </div>
+                    </div>
+                    <footer class="mdc-dialog__actions">
+                        <button type="button" class="mdc-button mdc-dialog__button" data-mdc-dialog-action="no">
+                            <span class="mdc-button__label">Cancel</span>
+                        </button>
+                        <button id="confirmJoinBtn" type="button" class="mdc-button mdc-dialog__button" data-mdc-dialog-action="yes">
+                            <span class="mdc-button__label">Join</span>
+                        </button>
+                    </footer>
+                </div>
+            </div>
+            <div class="mdc-dialog__scrim"></div>
+        </div>
 
-        <div id="errormsg"></div>
+        <video id="myVid" muted autoplay playsinline></video>
+    </div>
+    <div id="main_code">
+        <div id="buttons">
 
-        <button class="mdc-button mdc-button--raised" disabled id="createBtn">
-            <i class="material-icons mdc-button__icon" aria-hidden="true">group_add</i>
-            <span class="mdc-button__label">Create room</span>
-        </button>
-        <button class="mdc-button mdc-button--raised" disabled id="joinBtn">
-            <i class="material-icons mdc-button__icon" aria-hidden="true">group</i>
-            <span class="mdc-button__label">Join room</span>
-        </button>
-        <button class="mdc-button mdc-button--raised" id="cameraBtn">
-            <i class="material-icons mdc-button__icon" aria-hidden="true">Screen Share</i>
-            <span class="mdc-button__label">video off</span>
-        </button>
-        <div id="pane" class="row justify-content-center">
-            <button onmousedown="event.preventDefault()" class="col-0 btn btn-secondary" id="muteAudio">
-                <img id="micImg" src="img/mic.png" style="width:25px">
-            </button>
-            <button onmousedown="event.preventDefault()" class="col-0 btn btn-secondary" id="closecameraBtn">
-                <img id="camImg" src="img/cam.png" style="width:25px">
-            </button>
-            <button class="btn col-0 btn-secondary" id="screenShare">
-                <img src="img/present.png" style="width:25px">
-            </button>
             <div id="errormsg"></div>
 
-            <button style="background-color: red;border-color: red" class="btn col-0 btn-secondary" id="hangupBtn">
-                <img src="img/hangup.png" style="width:25px;">
+            <button class="mdc-button mdc-button--raised" id="createBtn">
+                <i class="material-icons mdc-button__icon" aria-hidden="true">group_add</i>
+                <span class="mdc-button__label">Create room</span>
             </button>
+            <button class="mdc-button mdc-button--raised" id="joinBtn">
+                <i class="material-icons mdc-button__icon" aria-hidden="true">group</i>
+                <span class="mdc-button__label">Join room</span>
+            </button>
+            <button class="mdc-button mdc-button--raised" id="cameraBtn">
+                <i class="material-icons mdc-button__icon" aria-hidden="true">Screen Share</i>
+                <span class="mdc-button__label">video off</span>
+            </button>
+            <div id="pane" class="row justify-content-center">
+                <button onmousedown="event.preventDefault()" class="col-0 btn btn-secondary" id="muteAudio">
+                    <img id="micImg" src="img/mic.png" style="width:25px">
+                </button>
+                <button onmousedown="event.preventDefault()" class="col-0 btn btn-secondary" id="closecameraBtn">
+                    <img id="camImg" src="img/cam.png" style="width:25px">
+                </button>
+                <button class="btn col-0 btn-secondary" id="screenShare">
+                    <img src="img/present.png" style="width:25px">
+                </button>
+                <div id="errormsg"></div>
 
-        </div>
-        <button id="chatbtn" class="btn btn-secondary">
-            <img src="img/chat.png" style="width:25px">
-        </button>
-    </div>
-    <div>
-        <span id="currentRoom"></span>
-    </div>
-    <div id="videos">
-        <div class="container">
-            <div class="rowi">
-                <video id="localVideo" muted autoplay playsinline></video>
+                <button style="background-color: red;border-color: red" class="btn col-0 btn-secondary" id="hangupBtn">
+                    <img src="img/hangup.png" style="width:25px;">
+                </button>
 
-                <video id="remoteVideo" autoplay playsinline></video>
             </div>
-            <div class="rowi">
-                <video id="screenVideo" autoplay playsinline muted></video>
-
-                <video id="remoteScreenShare" autoplay playsinline muted></video>
-            </div>
+            <button id="chatbtn" class="btn btn-secondary">
+                <img src="img/chat.png" style="width:25px">
+            </button>
         </div>
-    </div>
-    <div class="mdc-dialog" id="room-dialog" role="alertdialog" aria-modal="true" aria-labelledby="my-dialog-title" aria-describedby="my-dialog-content">
-        <div class="mdc-dialog__container">
-            <div class="mdc-dialog__surface">
-                <h2 class="mdc-dialog__title" id="my-dialog-title">Join room</h2>
-                <div class="mdc-dialog__content" id="my-dialog-content">
-                    Enter ID for room to join:
-                    <div class="mdc-text-field">
-                        <input type="text" id="room-id" class="mdc-text-field__input">
-                        <label class="mdc-floating-label" for="my-text-field">Room ID</label>
-                        <div class="mdc-line-ripple"></div>
-                    </div>
+        <div id="videos">
+            <div class="container">
+                <div class="rowi">
+                    <video id="localVideo" muted autoplay playsinline></video>
+
+                    <video id="remoteVideo" autoplay playsinline></video>
                 </div>
-                <footer class="mdc-dialog__actions">
-                    <button type="button" class="mdc-button mdc-dialog__button" data-mdc-dialog-action="no">
-                        <span class="mdc-button__label">Cancel</span>
-                    </button>
-                    <button id="confirmJoinBtn" type="button" class="mdc-button mdc-dialog__button" data-mdc-dialog-action="yes">
-                        <span class="mdc-button__label">Join</span>
-                    </button>
-                </footer>
+                <div class="rowi">
+                    <video id="screenVideo" autoplay playsinline muted></video>
+
+                    <video id="remoteScreenShare" autoplay playsinline muted></video>
+                </div>
             </div>
         </div>
-        <div class="mdc-dialog__scrim"></div>
+
     </div>
     <script src="https://unpkg.com/react/umd/react.production.min.js" crossorigin></script>
     <script src="https://unpkg.com/react-dom/umd/react-dom.production.min.js" crossorigin></script>

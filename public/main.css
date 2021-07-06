@@ -74,6 +74,10 @@ button:focus {
     border-radius: 45%;
 }
 
+.disabled {
+    display: none;
+}
+
 .btn:hover {
     background: #407cf7;
 }

@@ -20,7 +20,6 @@ let localScreenShare = null;
 const screenShare = document.getElementById('screenShare');
 const videooff = document.querySelector('#closecameraBtn');
 
-
 function init() {
     document.querySelector('#cameraBtn').addEventListener('click', openUserMedia);
     document.querySelector('#hangupBtn').addEventListener('click', hangUp);
@@ -71,6 +70,9 @@ function closeMic() {
 }
 
 async function createRoom() {
+    remoteStream = new MediaStream();
+    document.querySelector('#localVideo').srcObject = localStream;
+    document.querySelector('#remoteVideo').srcObject = remoteStream;
     console.log("HI\n");
     document.querySelector('#createBtn').disabled = true;
     document.querySelector('#joinBtn').disabled = true;
@@ -156,10 +158,11 @@ async function createRoom() {
 }
 
 function joinRoom() {
-    document.querySelector('#createBtn').disabled = true;
-    document.querySelector('#joinBtn').disabled = true;
-    document.querySelector('#confirmJoinBtn').
-    addEventListener('click', async() => {
+    console.log("abdakj");
+    remoteStream = new MediaStream();
+    document.querySelector('#localVideo').srcObject = localStream;
+    document.querySelector('#remoteVideo').srcObject = remoteStream;
+    document.querySelector('#confirmJoinBtn').addEventListener('click', async() => {
         roomId = document.querySelector('#room-id').value;
         console.log('Join room: ', roomId);
         document.querySelector(
@@ -235,8 +238,16 @@ async function joinRoomById(roomId) {
                 }
             });
         });
+        document.getElementById("main_code").classList.remove("disabled");
+        document.getElementById("front_page").classList.add("disabled");
         // Listening for remote ICE candidates above
     }
+}
+
+async function openForFrontPage(e) {
+    const stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
+    document.querySelector('#myVid').srcObject = stream;
+    localStream = stream;
 }
 
 async function openUserMedia(e) {
@@ -248,11 +259,6 @@ async function openUserMedia(e) {
     remoteScreenShare = new MediaStream();
     document.querySelector('#remoteScreenShare').srcObject = remoteScreenShare;
     console.log('Stream:', document.querySelector('#localVideo').srcObject);
-    document.querySelector('#cameraBtn').disabled = true;
-    document.querySelector('#joinBtn').disabled = false;
-    document.querySelector('#createBtn').disabled = false;
-    document.querySelector('#hangupBtn').disabled = false;
-    document.querySelector('#screenShare').disabled = false;
 }
 
 async function hangUp(e) {
@@ -343,9 +349,48 @@ function handleSuccess(stream) {
 }
 
 async function screen_share() {
-    localStream = navigator.mediaDevices.getDisplayMedia({ video: true });
+    localStream = await navigator.mediaDevices.getDisplayMedia({ video: true });
+    document.querySelector('#localVideo').srcObject = localStream;
+    localStream.getTracks().forEach(track => {
+        localStreamSender = peerConnection.addTrack(track, localStream);
+    });
+    peerConnection.addEventListener('track', event => {
+        console.log('Got remote track:', event.streams[0]);
+        event.streams[0].getTracks().forEach(track => {
+            console.log('Add a track to the remoteStream:', track);
+            remoteStream.addTrack(track);
+        });
+    });
+
 };
 
+let inRoom = false;
 
 
-init();
+//init();
+async function frontFun() {
+    openForFrontPage();
+    document.querySelector('#createIt').addEventListener('click', () => {
+        init();
+        createRoom();
+        main_code();
+    });
+    roomDialog = new mdc.dialog.MDCDialog(document.querySelector('#room-dialog'));
+    document.querySelector('#joinIt').addEventListener('click', () => {
+        init();
+        joinRoom();
+    });
+
+}
+
+function main_code() {
+    document.getElementById("main_code").classList.remove("disabled");
+    document.getElementById("front_page").classList.add("disabled");
+}
+
+if (inRoom === false) {
+    document.getElementById("main_code").classList.add("disabled");
+    frontFun();
+} else {
+    main_code();
+}
