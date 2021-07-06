@@ -66,34 +66,20 @@ body {
     }
 }
 
+button:focus {
+    outline: 0 !important;
+}
+
 .btn {
     border-radius: 45%;
 }
 
-#mute-audio {
-    transition: 120ms;
-}
-
-#mute-audio:hover,
-#mute-audio.on {
+.btn:hover {
     background: #407cf7;
 }
 
-#mute-video:hover circle {
-    fill: #407cf7;
-}
-
-#mute-video {
-    transition: 120ms;
-}
-
-#mute-video:hover,
-#mute-video.on {
+.blue {
     background: #407cf7;
-}
-
-#mute-video:hover circle {
-    fill: #407cf7;
 }
 
 #pane {

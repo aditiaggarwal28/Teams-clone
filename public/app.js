@@ -19,7 +19,6 @@ let remoteScreenShare = null;
 let localScreenShare = null;
 const screenShare = document.getElementById('screenShare');
 const videooff = document.querySelector('#closecameraBtn');
-const audiooff = document.querySelector('#audioChange');
 
 
 function init() {
@@ -42,6 +41,13 @@ function closeCamera() {
     console.log("video change");
     for (var i = 0; i < videoTracks.length; ++i) {
         videoTracks[i].enabled = !videoTracks[i].enabled;
+        if (!videoTracks[i].enabled) {
+            document.getElementById("camImg").src = "img/cameraoff.png";
+            document.getElementById("closecameraBtn").classList.add("blue");
+        } else {
+            document.getElementById("camImg").src = "img/cam.png";
+            document.getElementById("closecameraBtn").classList.remove("blue");
+        }
     }
 }
 
@@ -54,6 +60,13 @@ function closeMic() {
     console.log("Audio change");
     for (var i = 0; i < audioTracks.length; ++i) {
         audioTracks[i].enabled = !audioTracks[i].enabled;
+        if (!audioTracks[i].enabled) {
+            document.getElementById("micImg").src = "img/micoff.png";
+            document.getElementById("muteAudio").classList.add("blue");
+        } else {
+            document.getElementById("micImg").src = "img/mic.png";
+            document.getElementById("muteAudio").classList.remove("blue");
+        }
     }
 }
 
@@ -113,6 +126,8 @@ async function createRoom() {
             remoteStream.addTrack(track);
         });
     });
+
+
     if (!remoteStream) {
         document.querySelector('#remoteVideo').srcObject = null;
     }
@@ -187,7 +202,8 @@ async function joinRoomById(roomId) {
                 remoteStream.addTrack(track);
             });
         });
-        if (!remoteStream) {
+
+        if (remoteStream == null) {
             document.querySelector('#remoteVideo').srcObject = null;
         }
 
@@ -237,8 +253,6 @@ async function openUserMedia(e) {
     document.querySelector('#createBtn').disabled = false;
     document.querySelector('#hangupBtn').disabled = false;
     document.querySelector('#screenShare').disabled = false;
-    videooff.disabled = false;
-    audiooff.disabled = false;
 }
 
 async function hangUp(e) {
@@ -291,6 +305,9 @@ function registerPeerConnectionListeners() {
 
     peerConnection.addEventListener('connectionstatechange', () => {
         console.log(`Connection state change: ${peerConnection.connectionState}`);
+        if (peerConnection.connectionState === 'disconnected') {
+            document.querySelector('#remoteVideo').srcObject = null;
+        }
     });
 
     peerConnection.addEventListener('signalingstatechange', () => {
@@ -326,31 +343,9 @@ function handleSuccess(stream) {
 }
 
 async function screen_share() {
-    navigator.mediaDevices.getDisplayMedia({ video: true }).then(handleSuccess);
+    localStream = navigator.mediaDevices.getDisplayMedia({ video: true });
 };
 
-/*
-videooff.addEventListener("click", function() {
-    console.log("removeVideoTrack()");
-    if (localStreamSender) {
-        //peerConnection.removeTrack(remoteStreamSender);
-    }
 
-    const senders = peerConnection.getSenders();
-    senders.forEach((sender) => peerConnection.removeTrack(sender));
-
-    document.querySelector('#localVideo').srcObject = null;
-    localStream.removeTrack(localStream.getVideoTracks()[0])
-
-    //remoteStream.removeTrack(remoteStream.getVideoTracks()[0])
-    videooff.disabled = true;
-});*/
-
-audiooff.addEventListener("click", function() {
-    console.log("removeAudioTrack()");
-    localStream.removeTrack(localStream.getAudioTracks()[0]);
-    //stream.removeTrack(stream.getAudioTracks()[0])
-    audiooff.disabled = true;
-});
 
 init();
