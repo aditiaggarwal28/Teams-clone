@@ -176,3 +176,9 @@ video {
     display: block;
     margin: 1%;
 }
+
+#recFormat {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}

@@ -17,10 +17,17 @@ let localStreamSender = null;
 let remoteStreamSender = null;
 let remoteScreenShare = null;
 let localScreenShare = null;
+let mediaRecorder = null;
+let recordedBlobs = null;
+const recordButton = document.querySelector('#startRecording');
+const recordedVideo = document.querySelector('#recordedVideo');
+const downloadButton = document.querySelector('#downloadRecord');
+recordButton.textContent = 'Start Recording'
 
 function init() {
     document.querySelector('#hangupBtn').addEventListener('click', hangUp);
-
+    document.querySelector('#startRecording').addEventListener('click', screen_recording);;
+    document.querySelector('#downloadRecord').addEventListener('click', download_recording);;
     document.querySelector('#screenShare').addEventListener('click', screen_share);
     document.querySelector('#closecameraBtn').addEventListener('click', closeCamera);
     document.querySelector('#muteAudio').addEventListener('click', closeMic);
@@ -354,12 +361,93 @@ async function screen_share() {
 
 };
 
+async function screen_recording() {
+    if (recordButton.textContent === 'Start Recording') {
+        Recordingstart();
+    } else {
+        stopRecording();
+        recordButton.textContent = 'Start Recording';
+        downloadButton.disabled = false;
+        codecPreferences.disabled = false;
+    }
+};
+
+
+
+//function for downloading the recorded files 
+async function download_recording() {
+    const blob = new Blob(recordedBlobs, { type: 'video/webm' });
+    const url = window.URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.style.display = 'none';
+    a.href = url;
+    a.download = 'test.webm';
+    document.body.appendChild(a);
+    a.click();
+    setTimeout(() => {
+        document.body.removeChild(a);
+        window.URL.revokeObjectURL(url);
+    }, 100);
+};
+
+function handleDataAvailable(event) {
+    console.log('handleDataAvailable', event);
+    if (event.data && event.data.size > 0) {
+        recordedBlobs.push(event.data);
+    }
+}
+
+function getSupportedMimeTypes() {
+    const possibleTypes = [
+        'video/webm;codecs=vp9,opus',
+        'video/webm;codecs=vp8,opus',
+        'video/webm;codecs=h264,opus',
+        'video/mp4;codecs=h264,aac',
+    ];
+    return possibleTypes.filter(mimeType => {
+        return MediaRecorder.isTypeSupported(mimeType);
+    });
+}
+
+async function Recordingstart() {
+    recordedBlobs = [];
+    const mimeType = codecPreferences.options[codecPreferences.selectedIndex].value;
+    const options = { mimeType };
+    const recordedStream = await navigator.mediaDevices.getDisplayMedia({ video: { mediaSource: "screen" }, audio: true });
+    //recordedStream= navigator.mediaDevices.getDisplayMedia({video: { mediaSource: "screen" }});
+    mediaRecorder = new MediaRecorder(recordedStream, options);
+    recordButton.textContent = 'Stop Recording';
+    downloadButton.disabled = true;
+    codecPreferences.disabled = true;
+    mediaRecorder.onstop = (event) => {
+        console.log('Recorder stopped: ', event);
+        console.log('Recorded Blobs: ', recordedBlobs);
+    };
+    mediaRecorder.ondataavailable = handleDataAvailable;
+    mediaRecorder.start();
+    console.log('MediaRecorder started', mediaRecorder);
+}
+
+function stopRecording() {
+    mediaRecorder.stop();
+}
+
+
+
+
 let inRoom = false;
 
 
 //init();
 async function frontFun() {
     openForFrontPage();
+    getSupportedMimeTypes().forEach(mimeType => {
+        const option = document.createElement('option');
+        option.value = mimeType;
+        option.innerText = option.value;
+        codecPreferences.appendChild(option);
+    });
+    codecPreferences.disabled = false;
     document.querySelector('#createIt').addEventListener('click', () => {
         init();
         createRoom();

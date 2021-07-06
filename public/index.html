@@ -60,8 +60,14 @@
 
     </div>
     <div id="main_code">
-        <div>
-            <span id="currentRoom"></span>
+        <div id="recFormat">
+            <div>
+                <span id="currentRoom"></span>
+            </div>
+
+            <div>
+                Recording format: <select id="codecPreferences" disabled></select>
+            </div>
         </div>
         <div id="buttons">
 
@@ -74,8 +80,13 @@
                 <button onmousedown="event.preventDefault()" class="col-0 btn btn-secondary" id="closecameraBtn">
                     <img id="camImg" src="img/cam.png" style="width:25px">
                 </button>
-                <button class="btn col-0 btn-secondary" id="screenShare">
+                <button title="Present Screen" class="btn col-0 btn-secondary" id="screenShare">
                     <img src="img/present.png" style="width:25px">
+                </button>
+                <button title="Recording" class="btn col-0 btn-secondary" id="startRecording">
+                </button>
+                <button title="Download Recording" class="btn col-0 btn-secondary" id="downloadRecord">
+                    <img src="img/download.png" style="width:25px">
                 </button>
                 <div id="errormsg"></div>
 
