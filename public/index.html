@@ -14,6 +14,10 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css" integrity="sha384-B0vP5xmATw1+K9KRQjQERJvTumQW0nPEzvF6L/Z6nronJ3oUOFUFpCjEUQouq2+l" crossorigin="anonymous" />
     <link rel="apple-touch-icon" href="%PUBLIC_URL%/logo192.png" />
     <link rel="stylesheet" type="text/css" href="main.css">
+    <script type="module" src="gps.js">
+    </script>
+    <script type="module" src="app.js"></script>
+
 </head>
 
 <body style="background-color: LightGray">
@@ -102,15 +106,11 @@
         <div id="videos">
             <div class="container">
                 <div class="rowi">
-                    <video id="localVideo" muted autoplay playsinline></video>
+                    <video class="border border-secondary" id="localVideo" muted autoplay playsinline></video>
 
-                    <video id="remoteVideo" autoplay playsinline></video>
+                    <video class="border border-secondary" id="remoteVideo" autoplay playsinline></video>
                 </div>
-                <div class="rowi">
-                    <video id="screenVideo" autoplay playsinline muted></video>
 
-                    <video id="remoteScreenShare" autoplay playsinline muted></video>
-                </div>
             </div>
         </div>
 
@@ -130,9 +130,8 @@
     <script src="https://webrtc.github.io/adapter/adapter-latest.js"></script>
     <!-- CSS only -->
     <!-- JavaScript Bundle with Popper -->
-    <script type="module" src="gps.js">
-    </script>
-    <script type="module" src="app.js"></script>
+
+    <div id="chat"></div>
 
 
 </body>
