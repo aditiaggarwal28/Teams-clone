@@ -9,6 +9,7 @@ class Navbr extends Component {
             height: "50px",
             backgroundColor: "#202020",
         };
+        console.log("nononnonononononono");
         return (
             <>
                 <Navbar style={myStyle}>

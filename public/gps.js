@@ -9,15 +9,15 @@ const firebaseConfig = {
 };
 
 // Initialize Firebase
-firebase.initializeApp(firebaseConfig);
-const firestore = firebase.firestore();
+window.haha = window.firebase.initializeApp(firebaseConfig);
+const firestore = window.firebase.firestore();
 const settings = {
     timestampsInSnapshots: true,
     merge: true
 };
 firestore.settings(settings);
 
-export default firebase;
+export default window.firebase;
 
 export {
     firestore,

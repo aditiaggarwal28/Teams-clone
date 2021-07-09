@@ -23,7 +23,10 @@ let recordedBlobs = null;
 const recordButton = document.querySelector('#startRecording');
 const recordedVideo = document.querySelector('#recordedVideo');
 const downloadButton = document.querySelector('#downloadRecord');
+const stopShare = document.querySelector('#stopScreenShare');
+const startShare = document.querySelector('#screenShare');
 recordButton.textContent = 'Start Recording'
+const video_list = []
 
 function init() {
     document.querySelector('#hangupBtn').addEventListener('click', hangUp);
@@ -31,6 +34,7 @@ function init() {
     document.querySelector('#downloadRecord').addEventListener('click', download_recording);;
     document.querySelector('#screenShare').addEventListener('click', screen_share);
     document.querySelector('#closecameraBtn').addEventListener('click', closeCamera);
+    document.querySelector('#stopScreenShare').addEventListener('click', end_screen_share);
     document.querySelector('#muteAudio').addEventListener('click', closeMic);
     roomDialog = new mdc.dialog.MDCDialog(document.querySelector('#room-dialog'));
 }
@@ -78,7 +82,7 @@ async function createRoom() {
     document.querySelector('#localVideo').srcObject = localStream;
     document.querySelector('#remoteVideo').srcObject = remoteStream;
     console.log("HI\n");
-    const db = firebase.firestore();
+    const db = window.firebase.firestore();
     window.roomRef = await db.collection('rooms').doc();
 
     console.log('Create PeerConnection with configuration: ', configuration);
@@ -88,6 +92,7 @@ async function createRoom() {
 
     localStream.getTracks().forEach(track => {
         localStreamSender = peerConnection.addTrack(track, localStream);
+        video_list.push(localStreamSender);
     });
 
     // Code for collecting ICE candidates below
@@ -176,7 +181,7 @@ function joinRoom() {
 }
 
 async function joinRoomById(roomId) {
-    const db = firebase.firestore();
+    const db = window.firebase.firestore();
     window.roomRef = db.collection('rooms').doc(`${roomId}`);
     const roomSnapshot = await window.roomRef.get();
     console.log('Got room:', roomSnapshot.exists);
@@ -280,13 +285,12 @@ async function hangUp(e) {
 
     document.querySelector('#localVideo').srcObject = null;
     document.querySelector('#remoteVideo').srcObject = null;
-    document.querySelector('#remoteScreenShare').srcObject = null;
     document.querySelector('#hangupBtn').disabled = true;
     document.querySelector('#currentRoom').innerText = '';
 
     // Delete room on hangup
     if (roomId) {
-        const db = firebase.firestore();
+        const db = window.firebase.firestore();
         window.roomRef = db.collection('rooms').doc(roomId);
         const calleeCandidates = await window.roomRef.collection('calleeCandidates').get();
         calleeCandidates.forEach(async candidate => {
@@ -325,43 +329,24 @@ function registerPeerConnectionListeners() {
     });
 }
 
-function handleSuccess(stream) {
-    document.querySelector('#screenShare').disabled = true;
-    const video = document.querySelector('#screenVideo');
-    video.srcObject = stream;
-    // demonstrates how to detect that the user has stopped
-    // sharing the screen via the browser UI.
-    stream.getVideoTracks()[0].addEventListener('ended', () => {
-        document.querySelector('#screenShare').disabled = false;
-    });
-
-
-
-    peerConnection.addEventListener('track', event => {
-        console.log('Got remote screen share track:', event.streams[0]);
-        event.streams[0].getTracks().forEach(track => {
-            console.log('Add a track to the remoteScreenStream:', track);
-            remoteScreenShare.addTrack(track);
-        });
-    });
-
-}
 
 async function screen_share() {
-    localStream = await navigator.mediaDevices.getDisplayMedia({ video: true });
-    document.querySelector('#localVideo').srcObject = localStream;
-    localStream.getTracks().forEach(track => {
-        localStreamSender = peerConnection.addTrack(track, localStream);
-    });
-    peerConnection.addEventListener('track', event => {
-        console.log('Got remote track:', event.streams[0]);
-        event.streams[0].getTracks().forEach(track => {
-            console.log('Add a track to the remoteStream:', track);
-            remoteStream.addTrack(track);
-        });
-    });
-
+    if (!localScreenShare) {
+        localScreenShare = await navigator.mediaDevices.getDisplayMedia({ video: true });
+    }
+    video_list.find(sender => sender.track.kind === 'video').replaceTrack(localScreenShare.getTracks()[0]);
+    document.querySelector('#localVideo').srcObject = localScreenShare;
+    stopShare.disabled = false;
+    startShare.disabled = true;
 };
+
+async function end_screen_share() {
+    video_list.find(sender => sender.track.kind === 'video').replaceTrack(localStream.getTracks().find(track => track.kind === 'video'));
+    document.querySelector('#localVideo').srcObject = localStream;
+    stopShare.disabled = true;
+    startShare.disabled = false;
+};
+
 
 async function screen_recording() {
     if (recordButton.textContent === 'Start Recording') {
