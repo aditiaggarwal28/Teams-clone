@@ -125,7 +125,7 @@ async function createRoom() {
     console.log(`New room created with SDP offer. Room ID: ${window.roomRef.id}`);
     document.querySelector(
         '#currentRoom').innerText = `Current room is ${window.roomRef.id} - You are the caller!`;
-
+    //alert(`Room id id, ${window.roomRef.id}`)
     // Code for creating a room above
 
     peerConnection.addEventListener('track', event => {

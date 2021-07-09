@@ -6,7 +6,6 @@ import './Chatfun.css';
 let auth;
 
 function Chatroom() {
-	console.log(window.roomRef);
 	const val = useRef();
 	const messagesRef = window.roomRef.collection('messages');
 	const query = messagesRef.orderBy('createdAt').limit(25);
@@ -27,12 +26,12 @@ function Chatroom() {
 
 	return (
 		<>
-			<main>
+			<main className="border border-light rounded">
 				{messages && messages.map(msg => <ChatMessage key={msg.id} message={msg} />)}
 				<span ref={val}></span>
 			</main>
 
-			<form onSubmit={sendMessage}>
+			<form className="border border-light rounded" onSubmit={sendMessage}>
 				<input value={formValue} onChange={(e) => setFormValue(e.target.value)} />
 				<button type="submit" disabled={!formValue}>Send</button>
 			</form>
@@ -56,19 +55,18 @@ function ChatMessage(props) {
 function SignIn() {
 	
 	const signInWithGoogle = () => {
-		console.log("ahfnafkjn")
 		const provider = new window.firebase.auth.GoogleAuthProvider();
 		console.log(provider)
 		auth.signInWithPopup(provider);
 	}
 	return (
-		<button onClick={signInWithGoogle}> Sign In with google</button>
+		<button className="btn btn-secondary"onClick={signInWithGoogle}> Sign In with google</button>
 	)
 }
 
 function SignOut() {
 	return auth.currentUser && (
-		<button onClick={() => auth.signOut()}>Sign Out</button>
+		<button className="btn btn-secondary" onClick={() => auth.signOut()}>Sign Out</button>
 	)
 }
 
@@ -77,15 +75,13 @@ function ChatApp() {
 	// Initialize Firebase
 	window.firebase.app();
 	auth=window.firebase.auth();
-	console.log("agya")
 	const [user] = useAuthState(auth);
-	console.log("aaaya ni")
 	return (
-		<div className="App">
+		<div className="ChatApp">
 			<header className="App-header">
 				<SignOut />
 			</header>
-			<section>
+			<section >
 				{user ? <Chatroom /> : <SignIn />}
 			</section>
 		</div>

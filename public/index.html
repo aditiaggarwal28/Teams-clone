@@ -78,32 +78,30 @@
 
             <div id="pane" class="row justify-content-center">
                 <button onmousedown="event.preventDefault()" class="col-0 btn btn-secondary" id="muteAudio">
-                    <img id="micImg" src="img/mic.png" style="width:25px">
+                    <img id="micImg" src="img/mic.png" style="width:25px;height:auto">
                 </button>
                 <button onmousedown="event.preventDefault()" class="col-0 btn btn-secondary" id="closecameraBtn">
-                    <img id="camImg" src="img/cam.png" style="width:25px">
+                    <img id="camImg" src="img/cam.png" style="width:25px;height:auto">
                 </button>
                 <button title="Present Screen" class="btn col-0 btn-secondary" id="screenShare">
-                    <img src="img/present.png" style="width:25px">
+                    <img src="img/present.png" style="width:25px;height:auto">
                 </button>
                 <button title="Stop Presenting" class="btn col-0 btn-secondary" disabled id="stopScreenShare">
-                    <img src="img/stopshare.png" style="width:25px">
+                    <img src="img/stopshare.png" style="width:25px;height:auto">
                 </button>
                 <button title="Recording" class="btn col-0 btn-secondary" id="startRecording">
                 </button>
                 <button title="Download Recording" class="btn col-0 btn-secondary" id="downloadRecord">
-                    <img src="img/download.png" style="width:25px">
+                    <img src="img/download.png" style="width:25px;height:auto">
                 </button>
                 <div id="errormsg"></div>
 
                 <button style="background-color: red;border-color: red" class="btn col-0 btn-secondary" id="hangupBtn">
-                    <img src="img/hangup.png" style="width:25px;">
+                    <img src="img/hangup.png" style="width:25px;;height:auto">
                 </button>
 
             </div>
-            <button id="chatbtn" class="btn btn-secondary">
-                <img src="img/chat.png" style="width:25px">
-            </button>
+
         </div>
         <div id="videos">
             <div class="container">
@@ -115,7 +113,7 @@
 
             </div>
         </div>
-
+        <div id="chat"></div>
     </div>
     <script src="https://unpkg.com/react/umd/react.production.min.js" crossorigin></script>
     <script src="https://unpkg.com/react-dom/umd/react-dom.production.min.js" crossorigin></script>
@@ -133,7 +131,7 @@
     <!-- CSS only -->
     <!-- JavaScript Bundle with Popper -->
 
-    <div id="chat"></div>
+
 
 
 </body>

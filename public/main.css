@@ -4,66 +4,10 @@ body {
     font-family: Roboto, Helvetica, Arial, sans-serif;
 }
 
-#message {
-    background: white;
-    max-width: 360px;
-    margin: 100px auto 16px;
-    padding: 32px 24px;
-    border-radius: 3px;
-}
-
-#message h2 {
-    color: #ffa100;
-    font-weight: bold;
-    font-size: 16px;
-    margin: 0 0 8px;
-}
-
-#message h1 {
-    font-size: 22px;
-    font-weight: 300;
-    color: rgba(0, 0, 0, 0.6);
-    margin: 0 0 16px;
-}
-
-#message p {
-    line-height: 140%;
-    margin: 16px 0 24px;
-    font-size: 14px;
-}
-
-#message a {
-    display: block;
-    text-align: center;
-    background: #039be5;
-    text-transform: uppercase;
-    text-decoration: none;
-    color: white;
-    padding: 16px;
-    border-radius: 4px;
-}
-
-#message,
-#message a {
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
-}
-
 #load {
     color: rgba(0, 0, 0, 0.4);
     text-align: center;
     font-size: 13px;
-}
-
-@media (max-width: 600px) {
-    body,
-    #message {
-        margin-top: 0;
-        background: white;
-        box-shadow: none;
-    }
-    body {
-        border-top: 16px solid #ffa100;
-    }
 }
 
 button:focus {
@@ -89,23 +33,16 @@ button:focus {
 #pane {
     position: fixed;
     bottom: 2%;
-    left: 40%;
+    left: 30%;
     z-index: 3;
 }
 
-#chatbtn {
-    position: fixed !important;
-    bottom: 2%;
-    right: 5%;
-    margin: 7px;
-}
-
 .col-0 {
-    margin: 7px;
+    margin: 5px;
 }
 
 button {
-    margin: 0.2em 0.1em;
+    margin: 0.1em 0.05em;
     display: inline-block;
 }
 
@@ -148,7 +85,8 @@ button:hover {
 
 #localVideo {
     background: rgb(0, 0, 0);
-    max-width: 700px !important;
+    max-width: 50% !important;
+    width: 50% !important;
     height: auto;
     display: block;
     margin: 1%;
@@ -156,7 +94,8 @@ button:hover {
 
 #remoteVideo {
     background: rgb(0, 0, 0);
-    max-width: 700px !important;
+    max-width: 50% !important;
+    width: 50%;
     height: auto;
     display: block;
     margin: 1%;

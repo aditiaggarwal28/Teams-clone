@@ -1,26 +1,14 @@
 import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
 import Navbr from './Navbr';
-import ChatApp from './ChatApp';
+import Chat from './Chat';
 
 class App extends Component {
-    state = {
-        addContainer: false
-    }
-    add = () => {
-        this.setState({ addContainer: !this.state.addContainer });
-    }
-
     render() {
         return (
             <>
                 <Navbr />
-                <div>
-                    <button onClick={() => this.add()}>CLICK</button>
-                    {this.state.addContainer &&
-                        <ChatApp roomRef={window.roomRef}/>
-                    }
-                </div>
+                
             </>
 
         );
@@ -29,4 +17,10 @@ class App extends Component {
 
 
 }
+ReactDOM.render(
+    <>
+        <Chat />
+    </>,
+    document.getElementById('chat')
+);
 export default App
