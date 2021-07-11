@@ -1,5 +1,7 @@
 body {
     background: #202020 !important;
+    background-image: url("img/bubbles2.svg") !important;
+    background-size: cover;
     color: white;
     font-family: Roboto, Helvetica, Arial, sans-serif;
 }
@@ -8,6 +10,13 @@ body {
     color: rgba(0, 0, 0, 0.4);
     text-align: center;
     font-size: 13px;
+}
+
+@media (max-width: 600px) {
+    body,
+    body {
+        border-top: 16px solid #ffa100;
+    }
 }
 
 button:focus {
@@ -32,17 +41,24 @@ button:focus {
 
 #pane {
     position: fixed;
-    bottom: 2%;
-    left: 30%;
+    bottom: 1%;
+    left: 32%;
     z-index: 3;
 }
 
+#chatbtn {
+    position: fixed !important;
+    bottom: 2%;
+    right: 5%;
+    margin: 7px;
+}
+
 .col-0 {
-    margin: 5px;
+    margin: 7px;
 }
 
 button {
-    margin: 0.1em 0.05em;
+    margin: 0.2em 0.1em;
     display: inline-block;
 }
 
@@ -77,26 +93,18 @@ button:hover {
     flex: 1 !important;
 }
 
-.rowi {
-    display: flex;
-    flex-direction: row;
-    flex: 1 !important;
+.flex-even {
+    flex: 1;
 }
 
 #localVideo {
     background: rgb(0, 0, 0);
-    max-width: 50% !important;
-    width: 50% !important;
-    height: auto;
     display: block;
     margin: 1%;
 }
 
 #remoteVideo {
     background: rgb(0, 0, 0);
-    max-width: 50% !important;
-    width: 50%;
-    height: auto;
     display: block;
     margin: 1%;
 }
@@ -132,4 +140,9 @@ button:hover {
 
 #chat {
     z-index: 999 !important;
+    background: none;
+    background-image: url("img/bubbles2.svg");
+    background-size: cover;
 }
+
+#main_code {}

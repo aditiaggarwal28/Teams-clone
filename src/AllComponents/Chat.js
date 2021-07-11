@@ -14,7 +14,7 @@ class Chat extends Component {
     myStyle={
         position: 'fixed',
         bottom:'1%',
-        right:'1%',
+        left:'1%',
     }
 
     render() {
@@ -23,7 +23,7 @@ class Chat extends Component {
                 <div>
                     <button className="btn btn-secondary" style={this.myStyle} onClick={() => this.add()}><img id="chatBtn" src="../img/chat.png" alt="img"></img></button>
                     {this.state.addContainer &&
-                        <ChatApp roomRef={window.roomRef} />
+                        <ChatApp />
                     }
                 </div>
             </>

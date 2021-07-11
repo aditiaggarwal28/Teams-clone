@@ -1,11 +1,38 @@
 mdc.ripple.MDCRipple.attachTo(document.querySelector('.mdc-button'));
 const configuration = {
     iceServers: [{
-        urls: [
-            'stun:stun1.l.google.com:19302',
-            'stun:stun2.l.google.com:19302',
-        ],
-    }, ],
+            urls: [
+                'stun:stun1.l.google.com:19302',
+                'stun:stun2.l.google.com:19302',
+            ],
+        },
+        {
+
+            url: 'turn:numb.viagenie.ca',
+
+            credential: 'muazkh',
+
+            username: 'webrtc@live.com'
+
+        },
+        {
+
+            url: 'turn:192.158.29.39:3478?transport=udp',
+
+            credential: 'JZEOEt2V3Qb0y27GRntt2u2PAYA=',
+
+            username: '28224511:1379330808'
+
+        },
+        {
+            url: 'turn:192.158.29.39:3478?transport=tcp',
+
+            credential: 'JZEOEt2V3Qb0y27GRntt2u2PAYA=',
+
+            username: '28224511:1379330808'
+
+        }
+    ],
     iceCandidatePoolSize: 10,
 };
 let peerConnection = null;
@@ -19,6 +46,7 @@ let remoteScreenShare = null;
 let localScreenShare = null;
 let mediaRecorder = null;
 window.roomRef = null;
+window.joincall = false;
 let recordedBlobs = null;
 const recordButton = document.querySelector('#startRecording');
 const recordedVideo = document.querySelector('#recordedVideo');
@@ -36,6 +64,8 @@ function init() {
     document.querySelector('#closecameraBtn').addEventListener('click', closeCamera);
     document.querySelector('#stopScreenShare').addEventListener('click', end_screen_share);
     document.querySelector('#muteAudio').addEventListener('click', closeMic);
+    console.log(window.firebase.auth().currentUser.displayName);
+    document.getElementById("localName").innerHTML = window.firebase.auth().currentUser.displayName + "(You)";
     roomDialog = new mdc.dialog.MDCDialog(document.querySelector('#room-dialog'));
 }
 
@@ -83,7 +113,17 @@ async function createRoom() {
     document.querySelector('#remoteVideo').srcObject = remoteStream;
     console.log("HI\n");
     const db = window.firebase.firestore();
-    window.roomRef = await db.collection('rooms').doc();
+    if (window.roomRef == null) {
+        window.roomRef = await db.collection('rooms').doc();
+    } else {
+        db.collection('rooms').doc(window.roomRef.id);
+    }
+
+    document.getElementById("main_code").classList.add("disabled");
+    document.getElementById("front_page").classList.add("disabled");
+    document.getElementById("chat").classList.remove("disabled");
+    let chat_button = document.getElementById("chatBtn");
+    chat_button.click();
 
     console.log('Create PeerConnection with configuration: ', configuration);
     peerConnection = new RTCPeerConnection(configuration);
@@ -94,7 +134,8 @@ async function createRoom() {
         localStreamSender = peerConnection.addTrack(track, localStream);
         video_list.push(localStreamSender);
     });
-
+    closeMic();
+    closeCamera();
     // Code for collecting ICE candidates below
     const callerCandidatesCollection = window.roomRef.collection('callerCandidates');
 
@@ -125,7 +166,7 @@ async function createRoom() {
     console.log(`New room created with SDP offer. Room ID: ${window.roomRef.id}`);
     document.querySelector(
         '#currentRoom').innerText = `Current room is ${window.roomRef.id} - You are the caller!`;
-    //alert(`Room id id, ${window.roomRef.id}`)
+
     // Code for creating a room above
 
     peerConnection.addEventListener('track', event => {
@@ -166,7 +207,6 @@ async function createRoom() {
 }
 
 function joinRoom() {
-    console.log("abdakj");
     remoteStream = new MediaStream();
     document.querySelector('#localVideo').srcObject = localStream;
     document.querySelector('#remoteVideo').srcObject = remoteStream;
@@ -217,7 +257,8 @@ async function joinRoomById(roomId) {
         if (remoteStream == null) {
             document.querySelector('#remoteVideo').srcObject = null;
         }
-
+        closeMic();
+        closeCamera();
 
         // Code for creating SDP answer below
         const offer = roomSnapshot.data().offer;
@@ -246,8 +287,11 @@ async function joinRoomById(roomId) {
                 }
             });
         });
-        document.getElementById("main_code").classList.remove("disabled");
+        document.getElementById("main_code").classList.add("disabled");
         document.getElementById("front_page").classList.add("disabled");
+        document.getElementById("chat").classList.remove("disabled");
+        let chat_button = document.getElementById("chatBtn");
+        chat_button.click();
         // Listening for remote ICE candidates above
     }
 }
@@ -300,9 +344,26 @@ async function hangUp(e) {
         callerCandidates.forEach(async candidate => {
             await candidate.ref.delete();
         });
+    }
+    window.joincall = false;
+    document.getElementById("main_code").classList.add("disabled");
+    document.getElementById("front_page").classList.add("disabled");
+    document.getElementById("chat").classList.remove("disabled");
+    let chat_button = document.getElementById("chatBtn");
+    chat_button.click();
+    //from here just take it to the page of chat..where we have one button to leave chat
+}
+
+async function leaveChat(e) {
+    if (roomId) {
+        const db = window.firebase.firestore();
+        window.roomRef = db.collection('rooms').doc(roomId);
+        const messages = await window.roomRef.collection('messages').get();
+        messages.forEach(async candidate => {
+            await candidate.ref.delete();
+        });
         await window.roomRef.delete();
     }
-
     document.location.reload(true);
 }
 
@@ -438,7 +499,6 @@ async function frontFun() {
     document.querySelector('#createIt').addEventListener('click', () => {
         init();
         createRoom();
-        main_code();
     });
     roomDialog = new mdc.dialog.MDCDialog(document.querySelector('#room-dialog'));
     document.querySelector('#joinIt').addEventListener('click', () => {
@@ -457,6 +517,12 @@ if (inRoom === false) {
     console.log("hello aditi")
     document.getElementById("main_code").classList.add("disabled");
     frontFun();
+} else if (window.joincall === false) {
+    console.log("Hi, what's up");
+    console.log(window.joincall)
+    document.getElementById("main_code").classList.add("disabled");
+    document.getElementById("front_page").classList.add("disabled");
+    document.getElementById("chat").classList.remove("disabled");
 } else {
     main_code();
 }

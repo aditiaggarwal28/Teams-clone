@@ -4,8 +4,6 @@ import App from './AllComponents/App';
 import 'react-bootstrap'
 
 ReactDOM.render(
-  <>
-    <App />
-  </>,
+  <App/>,
   document.getElementById('root')
 );

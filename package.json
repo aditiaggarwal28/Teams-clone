@@ -25,6 +25,7 @@
         "react-native-safe-area-context": "^3.2.0",
         "react-native-screens": "^3.4.0",
         "react-navigation": "^4.4.4",
+        "react-router-dom": "^5.2.0",
         "react-script-tag": "^1.1.2",
         "react-scripts": "4.0.3",
         "react-webcam": "^5.2.4",

@@ -8,8 +8,8 @@ class Navbr extends Component {
         const myStyle = {
             height: "50px",
             backgroundColor: "#202020",
+            zIndex:"90",
         };
-        console.log("nononnonononononono");
         return (
             <>
                 <Navbar style={myStyle}>
@@ -27,12 +27,11 @@ class Navbr extends Component {
                         </Nav.Link>
                         <Nav.Link href="">
                             <h2 style={{
-                                fontSize: "25px",
                                 color: "white",
-                                background:"rgb(94, 48, 221)",
                                 paddingLeft: 9,
                                 paddingRight: 9,
                                 borderRadius:"5%",
+                                paddingTop:4,
                                 fontWeight:"inherit",
                             }}>Microsoft Teams</h2>
 

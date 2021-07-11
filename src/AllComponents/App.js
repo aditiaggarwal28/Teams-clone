@@ -1,18 +1,16 @@
 import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
-import Navbr from './Navbr';
 import Chat from './Chat';
-
+import Google from './Google';
+import Navbr from './Navbr'
+import SignOutButton from './SignOutButton'
 class App extends Component {
     render() {
         return (
-            <>
-                <Navbr />
-                
+            <> 
+                <Navbr/>
             </>
-
         );
-
     }
 
 
@@ -23,4 +21,20 @@ ReactDOM.render(
     </>,
     document.getElementById('chat')
 );
+
+ReactDOM.render(
+    <>
+        <Google/>
+    </>,
+    document.getElementById('signinGoogle')
+);
+
+ReactDOM.render(
+    <>
+        <SignOutButton/>
+    </>,
+    document.getElementById('signoutFront')
+);
+
+
 export default App

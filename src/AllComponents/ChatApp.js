@@ -2,10 +2,13 @@ import React, { useState, useEffect, useRef } from 'react';
 import { useCollectionData } from 'react-firebase-hooks/firestore';
 import { useAuthState } from 'react-firebase-hooks/auth';
 import './Chatfun.css';
+import OnlyChat from './OnlyChat.js';
+import ContinueToMeeting from './ContinueToMeeting';
 
 let auth;
 
 function Chatroom() {
+	window.joincall = true;
 	const val = useRef();
 	const messagesRef = window.roomRef.collection('messages');
 	const query = messagesRef.orderBy('createdAt').limit(25);
@@ -26,17 +29,17 @@ function Chatroom() {
 
 	return (
 		<>
-			<main className="border border-light rounded">
+			<h2>Chat</h2>
+			<main id="main">
 				{messages && messages.map(msg => <ChatMessage key={msg.id} message={msg} />)}
 				<span ref={val}></span>
 			</main>
 
-			<form className="border border-light rounded" onSubmit={sendMessage}>
-				<input value={formValue} onChange={(e) => setFormValue(e.target.value)} />
-				<button type="submit" disabled={!formValue}>Send</button>
+			<form id="formChat" onSubmit={sendMessage}>
+				<input id="inputChat" value={formValue} onChange={(e) => setFormValue(e.target.value)} />
+				<button className="chatBtn" type="submit" disabled={!formValue}>Send</button>
 			</form>
 		</>
-
 	)
 }
 
@@ -53,20 +56,21 @@ function ChatMessage(props) {
 }
 
 function SignIn() {
-	
+
 	const signInWithGoogle = () => {
+		console.log("ahfnafkjn")
 		const provider = new window.firebase.auth.GoogleAuthProvider();
 		console.log(provider)
 		auth.signInWithPopup(provider);
 	}
 	return (
-		<button className="btn btn-secondary"onClick={signInWithGoogle}> Sign In with google</button>
+		<button className="chatBtn" onClick={signInWithGoogle}> Sign In with google</button>
 	)
 }
 
 function SignOut() {
 	return auth.currentUser && (
-		<button className="btn btn-secondary" onClick={() => auth.signOut()}>Sign Out</button>
+		<button className="chatBtn" onClick={() => auth.signOut()}>Sign Out</button>
 	)
 }
 
@@ -74,17 +78,22 @@ function SignOut() {
 function ChatApp() {
 	// Initialize Firebase
 	window.firebase.app();
-	auth=window.firebase.auth();
+	auth = window.firebase.auth();
 	const [user] = useAuthState(auth);
 	return (
-		<div className="ChatApp">
-			<header className="App-header">
-				<SignOut />
-			</header>
-			<section >
-				{user ? <Chatroom /> : <SignIn />}
-			</section>
-		</div>
+		<>
+			<div className="mychatcss">
+				<div className="d-flex justify-content-center align-content-center">
+					<div className="card shadow border-0 ">
+						<div className="card-body">
+							<section className="chatsection">
+								{user ? <><Chatroom /> <OnlyChat /><ContinueToMeeting /> </> : <SignIn />}
+							</section>
+						</div>
+					</div>
+				</div>
+			</div>
+		</>
 	)
 }
 export default ChatApp
