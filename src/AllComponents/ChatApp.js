@@ -11,7 +11,7 @@ function Chatroom() {
 	window.joincall = true;
 	const val = useRef();
 	const messagesRef = window.roomRef.collection('messages');
-	const query = messagesRef.orderBy('createdAt').limit(25);
+	const query = messagesRef.orderBy('createdAt').limit();
 	const [messages] = useCollectionData(query, { idField: 'id' });
 	const [formValue, setFormValue] = useState('');
 
@@ -83,6 +83,7 @@ function ChatApp() {
 	return (
 		<>
 			<div className="mychatcss">
+				<h5 style={{position:'fixed',right:'2%'}}>Room ID: <span style={{color:'yellow'}}>{window.roomRef.id}</span></h5>
 				<div className="d-flex justify-content-center align-content-center">
 					<div className="card shadow border-0 ">
 						<div className="card-body">

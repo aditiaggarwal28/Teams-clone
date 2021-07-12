@@ -165,7 +165,7 @@ async function createRoom() {
     roomId = window.roomRef.id;
     console.log(`New room created with SDP offer. Room ID: ${window.roomRef.id}`);
     document.querySelector(
-        '#currentRoom').innerText = `Current room is ${window.roomRef.id} - You are the caller!`;
+        '#currentRoom').innerText = `Room ID: ${window.roomRef.id} `;
 
     // Code for creating a room above
 
@@ -206,6 +206,20 @@ async function createRoom() {
     // Listen for remote ICE candidates above
 }
 
+document.querySelector("#copyBtn").addEventListener("click", copyIt());
+
+function copyIt() {
+    /* Get the text field */
+    var copyText = document.getElementById("currentRoom");
+    var textArea = document.createElement("textarea");
+    textArea.value = copyText.textContent;
+    document.body.appendChild(textArea);
+    textArea.select();
+    document.execCommand("Copy");
+    textArea.remove();
+
+}
+
 function joinRoom() {
     remoteStream = new MediaStream();
     document.querySelector('#localVideo').srcObject = localStream;
@@ -214,7 +228,7 @@ function joinRoom() {
         roomId = document.querySelector('#room-id').value;
         console.log('Join room: ', roomId);
         document.querySelector(
-            '#currentRoom').innerText = `Current room is ${roomId} - You are the callee!`;
+            '#currentRoom').innerText = `Room ID: ${roomId} `;
         await joinRoomById(roomId);
     }, { once: true });
     roomDialog.open();
@@ -232,6 +246,7 @@ async function joinRoomById(roomId) {
         registerPeerConnectionListeners();
         localStream.getTracks().forEach(track => {
             localStreamSender = peerConnection.addTrack(track, localStream);
+            video_list.push(localStreamSender);
         });
 
         // Code for collecting ICE candidates below
@@ -351,7 +366,10 @@ async function hangUp(e) {
     document.getElementById("chat").classList.remove("disabled");
     let chat_button = document.getElementById("chatBtn");
     chat_button.click();
-    //from here just take it to the page of chat..where we have one button to leave chat
+    document.getElementById("gobackSpan").textContent = "Leave Chat"
+    document.querySelector('#goBackButton').addEventListener('click', () => {
+        leaveChat();
+    }); //from here just take it to the page of chat..where we have one button to leave chat
 }
 
 async function leaveChat(e) {
@@ -364,6 +382,7 @@ async function leaveChat(e) {
         });
         await window.roomRef.delete();
     }
+    window.firebase.auth().signOut();
     document.location.reload(true);
 }
 
@@ -513,16 +532,10 @@ function main_code() {
     document.getElementById("front_page").classList.add("disabled");
 }
 
+window.loggedIn = false;
+
 if (inRoom === false) {
     console.log("hello aditi")
     document.getElementById("main_code").classList.add("disabled");
     frontFun();
-} else if (window.joincall === false) {
-    console.log("Hi, what's up");
-    console.log(window.joincall)
-    document.getElementById("main_code").classList.add("disabled");
-    document.getElementById("front_page").classList.add("disabled");
-    document.getElementById("chat").classList.remove("disabled");
-} else {
-    main_code();
 }

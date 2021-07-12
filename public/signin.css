@@ -1,0 +1,20 @@
+#signin {
+    background: white;
+    background-image: url('img/bubbles2.svg');
+    background-size: cover;
+    color: black;
+    position: fixed;
+    height: 100vh;
+    top: 0;
+    left: 0;
+    width: 100vw;
+}
+
+#myForm {
+    margin: auto;
+    width: 45%;
+}
+
+#signin h2 {
+    text-align: center;
+}
