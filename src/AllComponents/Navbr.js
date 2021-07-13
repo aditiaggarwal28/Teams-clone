@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
-import ReactDOM from 'react-dom';
 import Logo from '../Images/Logo.png';
-import { Navbar, Form, Nav, Button, FormControl } from 'react-bootstrap';
+import { Navbar, Nav } from 'react-bootstrap';
 
+// Navbar 
 class Navbr extends Component {
     render() {
         const myStyle = {

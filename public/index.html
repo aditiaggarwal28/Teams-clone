@@ -22,7 +22,10 @@
 </head>
 
 <body>
+    <!--React App-->
     <div id="root"></div>
+
+    <!--Sign In page, User requires to signin to continue the video call and chat.-->
     <div id="signin">
         <br><br><br><br><br><br>
         <h2><b>Sign in to continue</b></h2>
@@ -42,6 +45,7 @@
 
                             </div>
                             <br><br>
+                            <!--Sign in with google.-->
                             <div class="d-flex justify-content-center" id="signinGoogle">
                             </div>
                             <br>
@@ -53,22 +57,28 @@
 
         </div>
     </div>
+
+    <!-- Front Page with create room anf join room and join and create chat.-->
     <div class="disabled" id="front_page">
         <div id="displayMail"></div>
         <div id="signoutFront"></div>
         <div id="front_flex">
             <div id="front-buttons">
+                <!--Create room-->
                 <button class="mdc-button mdc-button--raised" id="createIt">
                     <span class="mdc-button__label">Create New Room and Join</span>
                 </button>
+                <!--JOin room-->
                 <button class="mdc-button mdc-button--raised" id="joinIt">
                     <span class="mdc-button__label">Join Room</span>
                 </button>
             </div>
+            <!--Video of USer-->
             <video class="border rounded border-primary" id="myVid" muted autoplay playsinline>
             </video>
         </div>
 
+        <!--Popup text area to input room id to join the required room-->
         <div class="mdc-dialog" id="room-dialog" role="alertdialog" aria-modal="true" aria-labelledby="my-dialog-title" aria-describedby="my-dialog-content">
             <div class="mdc-dialog__container">
                 <div class="mdc-dialog__surface">
@@ -96,21 +106,27 @@
 
 
     </div>
+
+    <!--Main call Page-->
     <div class="disabled" id="main_code">
         <div id="recFormat">
             <div>
+                <!--Room id display and copy.-->
                 <span id="currentRoom"></span>
                 <button class="btn bg-transparent" id="copyBtn"><img src="img/copy.png" style="width:20px;height:auto"></button>
+                <span id="custom-tooltip">Copied to clipboard!</sapn>
             </div>
 
             <div>
                 Recording format: <select id="codecPreferences" disabled></select>
             </div>
         </div>
+
+
+        <!--Utility pane with buttons such as video and mic off.-->
         <div id="buttons">
 
             <div id="errormsg"></div>
-
             <div id="pane" class="row justify-content-center">
                 <button onmousedown="event.preventDefault()" class="col-0 btn btn-secondary" id="muteAudio">
                     <img id="micImg" src="img/mic.png" style="width:20px;height:auto">
@@ -131,16 +147,19 @@
                 </button>
                 <div id="errormsg"></div>
 
-                <button style="background-color: red;border-color: red" class="btn col-0 btn-secondary" id="hangupBtn">
+                <button title="Hang Up" style="background-color: red;border-color: red" class="btn col-0 btn-secondary" id="hangupBtn">
                     <img src="img/hangup.png" style="width:20px;height:auto">
                 </button>
 
             </div>
         </div>
+
+        <!--Videos display-->
         <div id="videos">
             <div class="d-flex">
+                <!--Local video-->
                 <video class="flex-even border border-secondary" id="localVideo" muted autoplay playsinline></video>
-
+                <!--Remote video-->
                 <video class="flex-even border border-secondary" id="remoteVideo" muted autoplay playsinline></video>
             </div>
             <h5 style="margin-left:2%" id="localName"></h5>
@@ -163,6 +182,7 @@
     <!-- CSS only -->
     <!-- JavaScript Bundle with Popper -->
 
+    <!--Chat page.-->
     <div class="disabled" id="chat"></div>
 
 

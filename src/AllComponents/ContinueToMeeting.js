@@ -8,6 +8,7 @@ function Fun(){
     )
 }
 
+//Continue to meeting button functionality
 class ContinueToMeeting extends Component {
     state = {
         addContainer: false

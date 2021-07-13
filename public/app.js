@@ -1,5 +1,5 @@
-mdc.ripple.MDCRipple.attachTo(document.querySelector('.mdc-button'));
-const configuration = {
+mdc.ripple.MDCRipple.attachTo(document.querySelector('.mdc-button')); //mdc popup text area
+const configuration = { // turn and stun servers
     iceServers: [{
             urls: [
                 'stun:stun1.l.google.com:19302',
@@ -35,21 +35,19 @@ const configuration = {
     ],
     iceCandidatePoolSize: 10,
 };
-let peerConnection = null;
-let localStream = null;
-let remoteStream = null;
-let roomDialog = null;
+let peerConnection = null; //main peerConnection
+let localStream = null; //stores the local stream of the user
+let remoteStream = null; //stores the remote stream obtained via peerconnection
+let roomDialog = null; //popup mdc room dialog
 let roomId = null;
-let localStreamSender = null;
-let remoteStreamSender = null;
-let remoteScreenShare = null;
-let localScreenShare = null;
+let localStreamSender = null; //The RTCRtpSender object which will be used to transmit the localstream data
+let remoteScreenShare = null; // screenShare stream for remote user
+let localScreenShare = null; // screenShare stream for local user
 let mediaRecorder = null;
 window.roomRef = null;
 window.joincall = false;
 let recordedBlobs = null;
 const recordButton = document.querySelector('#startRecording');
-const recordedVideo = document.querySelector('#recordedVideo');
 const downloadButton = document.querySelector('#downloadRecord');
 const stopShare = document.querySelector('#stopScreenShare');
 const startShare = document.querySelector('#screenShare');
@@ -57,6 +55,8 @@ recordButton.textContent = 'Start Recording'
 const video_list = []
 
 function init() {
+    // this function assigns all buttons to their respective functions and
+    // also initializes the dialog box for entering room id.
     document.querySelector('#hangupBtn').addEventListener('click', hangUp);
     document.querySelector('#startRecording').addEventListener('click', screen_recording);;
     document.querySelector('#downloadRecord').addEventListener('click', download_recording);;
@@ -70,6 +70,8 @@ function init() {
 }
 
 function closeCamera() {
+    // this function is to close and open camera on clicking camera off button.
+    // This is done by disabling and enabling the video tracks of localStream.
     if (localStream == null) {
         console.log("no stream found")
         return;
@@ -89,6 +91,8 @@ function closeCamera() {
 }
 
 function closeMic() {
+    // this function is to close and open mic on clicking mic off button.
+    // This is done by disabling and enabling the audio tracks of localStream.
     if (localStream == null) {
         console.log("no stream found")
         return;
@@ -108,34 +112,52 @@ function closeMic() {
 }
 
 async function createRoom() {
+    // Create Room for WebApp
+    /*
+        It creates a new room at the firebase databases and adds the user in it.
+
+    */
     remoteStream = new MediaStream();
     document.querySelector('#localVideo').srcObject = localStream;
     document.querySelector('#remoteVideo').srcObject = remoteStream;
     console.log("HI\n");
     const db = window.firebase.firestore();
+
+    // creating new room at firestore database of firebase collections
     if (window.roomRef == null) {
         window.roomRef = await db.collection('rooms').doc();
     } else {
         db.collection('rooms').doc(window.roomRef.id);
     }
 
+    //changing the display pages on entering the room.
     document.getElementById("main_code").classList.add("disabled");
     document.getElementById("front_page").classList.add("disabled");
     document.getElementById("chat").classList.remove("disabled");
     let chat_button = document.getElementById("chatBtn");
     chat_button.click();
 
+    //new pperconnnection
     console.log('Create PeerConnection with configuration: ', configuration);
     peerConnection = new RTCPeerConnection(configuration);
 
     registerPeerConnectionListeners();
 
+
+    // adding local strams on the peerconnection
+    // to be retrieved the the other user as remote stream
+    // also maintaining a video list which contains the video
+    // of user and the screen sharing video to display user video
+    // and to share screen on the same stream as and when required.
     localStream.getTracks().forEach(track => {
         localStreamSender = peerConnection.addTrack(track, localStream);
         video_list.push(localStreamSender);
     });
+
+    //initially both camera and mic are off for the user.
     closeMic();
     closeCamera();
+
     // Code for collecting ICE candidates below
     const callerCandidatesCollection = window.roomRef.collection('callerCandidates');
 
@@ -169,6 +191,8 @@ async function createRoom() {
 
     // Code for creating a room above
 
+
+    //retrriving remote user tracks as remote stream from the peerConnection.
     peerConnection.addEventListener('track', event => {
         console.log('Got remote track:', event.streams[0]);
         event.streams[0].getTracks().forEach(track => {
@@ -181,6 +205,7 @@ async function createRoom() {
     if (!remoteStream) {
         document.querySelector('#remoteVideo').srcObject = null;
     }
+
     // Listening for remote session description below
     window.roomRef.onSnapshot(async snapshot => {
         const data = snapshot.data();
@@ -206,6 +231,12 @@ async function createRoom() {
     // Listen for remote ICE candidates above
 }
 
+
+
+// Copying the room id to clipboard.
+// Room id is copied by creating a new textarea element
+// and selecting and copying it.
+// Also, a tooltip is displayed for 1 second on button press.
 document.querySelector("#copyBtn").addEventListener("click", copyIt);
 
 function copyIt() {
@@ -214,11 +245,18 @@ function copyIt() {
     document.body.appendChild(dummy);
     dummy.value = window.roomRef.id;
     dummy.select();
+    document.getElementById("custom-tooltip").style.display = "inline";
     document.execCommand("copy");
     document.body.removeChild(dummy);
-
+    setTimeout(function() {
+        document.getElementById("custom-tooltip").style.display = "none";
+    }, 1000);
 }
+//copy room id above
 
+
+
+// joining a room with custom roomid
 function joinRoom() {
     remoteStream = new MediaStream();
     document.querySelector('#localVideo').srcObject = localStream;
@@ -234,6 +272,8 @@ function joinRoom() {
 }
 
 async function joinRoomById(roomId) {
+    //getting articular room from the firestore databases
+    //using room id.
     const db = window.firebase.firestore();
     window.roomRef = db.collection('rooms').doc(`${roomId}`);
     const roomSnapshot = await window.roomRef.get();
@@ -241,8 +281,16 @@ async function joinRoomById(roomId) {
 
     if (roomSnapshot.exists) {
         console.log('Create PeerConnection with configuration: ', configuration);
+
+        //new peerConnection
         peerConnection = new RTCPeerConnection(configuration);
         registerPeerConnectionListeners();
+
+        // adding local strams on the peerconnection
+        // to be retrieved the the other user as remote stream
+        // also maintaining a video list which contains the video
+        // of user and the screen sharing video to display user video
+        // and to share screen on the same stream as and when required.
         localStream.getTracks().forEach(track => {
             localStreamSender = peerConnection.addTrack(track, localStream);
             video_list.push(localStreamSender);
@@ -259,19 +307,9 @@ async function joinRoomById(roomId) {
             calleeCandidatesCollection.add(event.candidate.toJSON());
         });
         // Code for collecting ICE candidates above
-        document.querySelector("#copyBtn").addEventListener("click", copyIt);
 
-        function copyIt() {
-            /* Get the text field */
-            var dummy = document.createElement("textarea");
-            document.body.appendChild(dummy);
-            dummy.value = window.roomRef.id;
-            dummy.select();
-            document.execCommand("copy");
-            document.body.removeChild(dummy);
 
-        }
-
+        //retrriving remote user tracks as remote stream from the peerConnection.
         peerConnection.addEventListener('track', event => {
             console.log('Got remote track:', event.streams[0]);
             event.streams[0].getTracks().forEach(track => {
@@ -283,6 +321,8 @@ async function joinRoomById(roomId) {
         if (remoteStream == null) {
             document.querySelector('#remoteVideo').srcObject = null;
         }
+
+        //initally camera and mic are off.
         closeMic();
         closeCamera();
 
@@ -322,33 +362,32 @@ async function joinRoomById(roomId) {
     }
 }
 
+
+// Asks for permission to open camera and mic.
+// Opens camera and mic for site.
 async function openForFrontPage(e) {
     const stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
     document.querySelector('#myVid').srcObject = stream;
     localStream = stream;
 }
 
-async function openUserMedia(e) {
-    const stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
-    document.querySelector('#localVideo').srcObject = stream;
-    localStream = stream;
-    remoteStream = new MediaStream();
-    document.querySelector('#remoteVideo').srcObject = remoteStream;
-    remoteScreenShare = new MediaStream();
-    document.querySelector('#remoteScreenShare').srcObject = remoteScreenShare;
-    console.log('Stream:', document.querySelector('#localVideo').srcObject);
-}
 
+// Disconnects and hangs up the call.
+// Video call is disconnected but anyone can still chat in here.
+// This is because chats are stored in rooms of firebase databases.
 async function hangUp(e) {
+    //close localStream
     const tracks = document.querySelector('#localVideo').srcObject.getTracks();
     tracks.forEach(track => {
         track.stop();
     });
 
+    // Close Remote Stream
     if (remoteStream) {
         remoteStream.getTracks().forEach(track => track.stop());
     }
 
+    //close peerconnection
     if (peerConnection) {
         peerConnection.close();
     }
@@ -371,6 +410,8 @@ async function hangUp(e) {
             await candidate.ref.delete();
         });
     }
+
+    //opening chat page on hangup
     window.joincall = false;
     document.getElementById("main_code").classList.add("disabled");
     document.getElementById("front_page").classList.add("disabled");
@@ -383,6 +424,8 @@ async function hangUp(e) {
     }); //from here just take it to the page of chat..where we have one button to leave chat
 }
 
+
+//To permanently leave the room, leaving chat as well as call.
 async function leaveChat(e) {
     if (roomId) {
         const db = window.firebase.firestore();
@@ -393,10 +436,12 @@ async function leaveChat(e) {
         });
         await window.roomRef.delete();
     }
+    //automatically signs out user on hangup.
     window.firebase.auth().signOut();
     document.location.reload(true);
 }
 
+// Peerconnection registration code below.
 function registerPeerConnectionListeners() {
     peerConnection.addEventListener('icegatheringstatechange', () => {
         console.log(
@@ -419,18 +464,23 @@ function registerPeerConnectionListeners() {
             `ICE connection state change: ${peerConnection.iceConnectionState}`);
     });
 }
+// Peerconnection registration code above.
 
-
+// Screen share
 async function screen_share() {
     if (!localScreenShare) {
         localScreenShare = await navigator.mediaDevices.getDisplayMedia({ video: true });
     }
+
+    //adds the screen share stream to video_list 
+    //to be able to be displayed in place of user video.
     video_list.find(sender => sender.track.kind === 'video').replaceTrack(localScreenShare.getTracks()[0]);
     document.querySelector('#localVideo').srcObject = localScreenShare;
     stopShare.disabled = false;
     startShare.disabled = true;
 };
 
+// Ends the sceren share and puts back the user video on the localstream.
 async function end_screen_share() {
     video_list.find(sender => sender.track.kind === 'video').replaceTrack(localStream.getTracks().find(track => track.kind === 'video'));
     document.querySelector('#localVideo').srcObject = localStream;
@@ -439,6 +489,8 @@ async function end_screen_share() {
 };
 
 
+// Starting and ending the screen recording
+// this function controls when to start and stoop the sceen recording .
 async function screen_recording() {
     if (recordButton.textContent === 'Start Recording') {
         Recordingstart();
@@ -449,7 +501,6 @@ async function screen_recording() {
         codecPreferences.disabled = false;
     }
 };
-
 
 
 //function for downloading the recorded files 
@@ -475,6 +526,7 @@ function handleDataAvailable(event) {
     }
 }
 
+// to recored the video in different codecs.
 function getSupportedMimeTypes() {
     const possibleTypes = [
         'video/webm;codecs=vp9,opus',
@@ -487,6 +539,8 @@ function getSupportedMimeTypes() {
     });
 }
 
+
+// stating thr recording.
 async function Recordingstart() {
     recordedBlobs = [];
     const mimeType = codecPreferences.options[codecPreferences.selectedIndex].value;
@@ -506,17 +560,17 @@ async function Recordingstart() {
     console.log('MediaRecorder started', mediaRecorder);
 }
 
+// stop recording
 function stopRecording() {
     mediaRecorder.stop();
 }
 
-
-
-
+// this is always false at the beginning of the code.
+// This decides when to execute what code.
 let inRoom = false;
 
-
 //init();
+//front page initialization with create room and join room.
 async function frontFun() {
     openForFrontPage();
     getSupportedMimeTypes().forEach(mimeType => {
@@ -538,15 +592,10 @@ async function frontFun() {
 
 }
 
-function main_code() {
-    document.getElementById("main_code").classList.remove("disabled");
-    document.getElementById("front_page").classList.add("disabled");
-}
 
-window.loggedIn = false;
+window.loggedIn = false; // if user is logged in or not.
 
 if (inRoom === false) {
-    console.log("hello aditi")
     document.getElementById("main_code").classList.add("disabled");
     frontFun();
 }

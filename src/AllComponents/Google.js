@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import MainSign from './SignIn'
 
+//Sign in with google
 class Google extends Component {
     constructor() {
         super();

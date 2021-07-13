@@ -1,3 +1,10 @@
+/*
+    This file contains the configuration file for firebase authentication.
+    Putting in the configuration file, firebase app is initialized.
+    After app initialization, firestore databases are loaded with specific
+    settings. This firebase app is used globally in the entire application.
+*/
+
 const firebaseConfig = {
     apiKey: "AIzaSyBw6BFQF87kCuwfAXi6J93d5R6PAGPEO2Q",
     authDomain: "higps-ec870.firebaseapp.com",

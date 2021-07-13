@@ -20,7 +20,7 @@ function DisplayName() {
         return (
             <div style={{display: 'flex',flexDirection: 'row',alignItems: 'center'}}>
             <h6 style={{paddingRight:20}}>{user.email}</h6>
-            <img src={user.photoURL}/>
+            <img src={user.photoURL} alt="User"/>
             </div>
         )   
     }

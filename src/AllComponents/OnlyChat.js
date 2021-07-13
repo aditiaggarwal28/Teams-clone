@@ -1,13 +1,5 @@
 import React, { Component } from 'react';
-import ChatApp from './ChatApp';
 
-function Fun(){
-    const dialog=new  window.mdc.dialog.MDCDialog(document.querySelector('#room-dialog'))
-    dialog.open();
-    return(
-        null
-    )
-}
 
 class OnlyChat extends Component {
     state = {

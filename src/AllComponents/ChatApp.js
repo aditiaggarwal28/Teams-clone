@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useRef } from 'react';
 import { useCollectionData } from 'react-firebase-hooks/firestore';
 import { useAuthState } from 'react-firebase-hooks/auth';
 import './Chatfun.css';
@@ -7,6 +7,7 @@ import ContinueToMeeting from './ContinueToMeeting';
 
 let auth;
 
+// CHat room retrives chat from databases and displays.
 function Chatroom() {
 	window.joincall = true;
 	const val = useRef();
@@ -43,22 +44,23 @@ function Chatroom() {
 	)
 }
 
+// Input message
 function ChatMessage(props) {
 	const { text, uid, photoURL } = props.message;
 	const messageClass = uid === auth.currentUser.uid ? 'sent' : 'receive';
 
 	return (
 		<div className={`message ${messageClass}`}>
-			<img src={photoURL} />
+			<img src={photoURL} alt="User" />
 			<p> {text}</p>
 		</div>
 	)
 }
 
+// Sign in
 function SignIn() {
 
 	const signInWithGoogle = () => {
-		console.log("ahfnafkjn")
 		const provider = new window.firebase.auth.GoogleAuthProvider();
 		console.log(provider)
 		auth.signInWithPopup(provider);
@@ -68,11 +70,6 @@ function SignIn() {
 	)
 }
 
-function SignOut() {
-	return auth.currentUser && (
-		<button className="chatBtn" onClick={() => auth.signOut()}>Sign Out</button>
-	)
-}
 
 
 function ChatApp() {

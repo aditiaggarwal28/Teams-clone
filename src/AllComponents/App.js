@@ -4,6 +4,8 @@ import Chat from './Chat';
 import Google from './Google';
 import Navbr from './Navbr'
 import SignOutButton from './SignOutButton'
+
+// Navbar on every page.
 class App extends Component {
     render() {
         return (
@@ -12,9 +14,8 @@ class App extends Component {
             </>
         );
     }
-
-
 }
+
 ReactDOM.render(
     <>
         <Chat />

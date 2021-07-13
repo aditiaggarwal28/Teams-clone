@@ -3,6 +3,7 @@ import ChatApp from './ChatApp';
 import '../img/chat.png'
 import './Chatfun.css'
 
+// CHat button functionality.
 class Chat extends Component {
     state = {
         addContainer: false
@@ -21,7 +22,7 @@ class Chat extends Component {
         return (
             <>
                 <div>
-                    <button className="btn btn-secondary" style={this.myStyle} onClick={() => this.add()}><img id="chatBtn" src="../img/chat.png" alt="img"></img></button>
+                    <button title="Chat" className="btn btn-secondary" style={this.myStyle} onClick={() => this.add()}><img id="chatBtn" src="../img/chat.png" alt="img"></img></button>
                     {this.state.addContainer &&
                         <ChatApp />
                     }
