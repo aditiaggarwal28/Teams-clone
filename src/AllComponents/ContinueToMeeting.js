@@ -33,7 +33,7 @@ class ContinueToMeeting extends Component {
         return (
             <>
                 <div style={this.myStyle}>
-                    <button id="goBackButton" className="mdc-button mdc-button--raised"  onClick={() => this.add()}><span id="gobackSpan" className="mdc-button__label">Join/Go Back To the meeting</span></button>
+                    <button id="goBackButton" className="mdc-button mdc-button--raised"  onClick={() => this.add()}><span id="gobackSpan" className="mdc-button__label">Go to the meeting</span></button>
                     {this.state.addContainer && <Fun/>}
                 </div>
             </>
