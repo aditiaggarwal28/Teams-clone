@@ -206,17 +206,16 @@ async function createRoom() {
     // Listen for remote ICE candidates above
 }
 
-document.querySelector("#copyBtn").addEventListener("click", copyIt());
+document.querySelector("#copyBtn").addEventListener("click", copyIt);
 
 function copyIt() {
     /* Get the text field */
-    var copyText = document.getElementById("currentRoom");
-    var textArea = document.createElement("textarea");
-    textArea.value = copyText.textContent;
-    document.body.appendChild(textArea);
-    textArea.select();
-    document.execCommand("Copy");
-    textArea.remove();
+    var dummy = document.createElement("textarea");
+    document.body.appendChild(dummy);
+    dummy.value = window.roomRef.id;
+    dummy.select();
+    document.execCommand("copy");
+    document.body.removeChild(dummy);
 
 }
 
@@ -260,6 +259,18 @@ async function joinRoomById(roomId) {
             calleeCandidatesCollection.add(event.candidate.toJSON());
         });
         // Code for collecting ICE candidates above
+        document.querySelector("#copyBtn").addEventListener("click", copyIt);
+
+        function copyIt() {
+            /* Get the text field */
+            var dummy = document.createElement("textarea");
+            document.body.appendChild(dummy);
+            dummy.value = window.roomRef.id;
+            dummy.select();
+            document.execCommand("copy");
+            document.body.removeChild(dummy);
+
+        }
 
         peerConnection.addEventListener('track', event => {
             console.log('Got remote track:', event.streams[0]);
