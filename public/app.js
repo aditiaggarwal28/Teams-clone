@@ -78,9 +78,12 @@ function closeCamera() {
     }
     var videoTracks = localStream.getVideoTracks();
     console.log("video change");
+
+
     for (var i = 0; i < videoTracks.length; ++i) {
         videoTracks[i].enabled = !videoTracks[i].enabled;
         if (!videoTracks[i].enabled) {
+
             document.getElementById("camImg").src = "img/cameraoff.png";
             document.getElementById("closecameraBtn").classList.add("blue");
         } else {
@@ -438,7 +441,7 @@ async function leaveChat(e) {
     }
     //automatically signs out user on hangup.
     window.firebase.auth().signOut();
-    document.location.reload(true);
+    window.location.reload();
 }
 
 // Peerconnection registration code below.

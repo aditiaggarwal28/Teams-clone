@@ -62,6 +62,15 @@ button:focus {
     color: #fff;
 }
 
+#message-tool {
+    position: fixed;
+    bottom: 12%;
+    left: 45%;
+    background-color: white;
+    color: blue;
+    border-radius: 4px;
+}
+
 .col-0 {
     margin: 7px;
 }
