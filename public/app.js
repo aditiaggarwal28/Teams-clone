@@ -77,13 +77,9 @@ function closeCamera() {
         return;
     }
     var videoTracks = localStream.getVideoTracks();
-    console.log("video change");
-
-
     for (var i = 0; i < videoTracks.length; ++i) {
         videoTracks[i].enabled = !videoTracks[i].enabled;
         if (!videoTracks[i].enabled) {
-
             document.getElementById("camImg").src = "img/cameraoff.png";
             document.getElementById("closecameraBtn").classList.add("blue");
         } else {
